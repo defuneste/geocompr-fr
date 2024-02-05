@@ -32,37 +32,37 @@ Si vous souhaitez intégrer vos données dans les services web (ou si vous voule
 Une autre façon d'obtenir des données spatiales est d'utiliser des services web \@ref(geographic-web-services).
 La dernière section \@ref(visual-outputs) présente des méthodes de sauvegarde des sorties visuelles (cartes), en préparation du chapitre \@ref(adv-map) sur la visualisation des données.
 
-## File formats
+## Formats de fichiers
 
 \index{file formats}
-Geographic datasets are usually stored as files or in spatial databases.
-File formats can either store vector or raster data, while spatial databases such as [PostGIS](https://postgis.net/) can store both (see also Section \@ref(postgis)).
-Today the variety of file formats may seem bewildering but there has been much consolidation and standardization since the beginnings of GIS software in the 1960s when the first widely distributed program ([SYMAP](https://news.harvard.edu/gazette/story/2011/10/the-invention-of-gis/)) for spatial analysis was created at Harvard University [@coppock_history_1991].
+Les jeux de données géographiques sont généralement stockés sous forme de fichiers ou dans des bases de données spatiales.
+Les données vectorielles ou rasters ont des formats de fichier différents, tandis que les bases de données spatiales telles que [PostGIS] (https://postgis.net/) peuvent stocker les deux (voir également la section \@ref(postgis)).
+Aujourd'hui, la variété des formats de fichiers peut sembler déconcertante, mais il y a eu beaucoup de consolidation et de normalisation depuis les débuts des logiciels SIG dans les années 1960, lorsque le premier programme largement distribué ([SYMAP](https://news.harvard.edu/gazette/story/2011/10/the-invention-of-gis/)) pour l'analyse spatiale a été créé à l'université de Harvard [@coppock_history_1991].
 
 \index{GDAL}
-GDAL (which should be pronounced "goo-dal", with the double "o" making a reference to object-orientation), the Geospatial Data Abstraction Library, has resolved many issues associated with incompatibility between geographic file formats since its release in 2000.
-GDAL provides a unified and high-performance interface for reading and writing of many raster and vector data formats.^[As we mentioned in Chapter \@ref(geometry-operations), GDAL also contains a set of utility functions allowing for raster mosaicing, resampling, cropping, and reprojecting, etc.]
-Many open and proprietary GIS programs, including GRASS GIS, ArcGIS\index{ArcGIS} and QGIS\index{QGIS}, use GDAL\index{GDAL} behind their GUIs\index{graphical user interface} for doing the legwork of ingesting and spitting out geographic data in appropriate formats.
+GDAL (qui devrait se prononcer "goo-dal", le double "o" faisant référence à la programation orientée objet), la Geospatial Data Abstraction Library, a résolu de nombreux problèmes liés à l'incompatibilité entre les formats de fichiers géographiques depuis sa publication en 2000.
+GDAL fournit une interface unifiée et performante pour la lecture et l'écriture de nombreux formats de données matricielles et vectorielles.^[Comme nous l'avons mentionné au chapitre \@ref(geometry-operations), GDAL contient également un ensemble de fonctions utilitaires permettant le mosaïquage, le rééchantillonnage, le recadrage et la reprojection de données rasters, etc.]
+De nombreux programmes SIG libres et propriétaires, dont GRASS GIS, ArcGIS\index{ArcGIS} et QGIS\index{QGIS}, utilisent GDAL\index{GDAL} derrière leur GUI\index{interface utilisateur graphique} pour effectuer le travail d'ingestion et de restitution des données géographiques dans les formats appropriés.
 
-GDAL\index{GDAL} provides access to more than 200 vector and raster data formats.
-Table \@ref(tab:formats) presents some basic information about selected and often used spatial file formats.
+GDAL\index{GDAL} permet d'accéder à plus de 200 formats de données vectorielles et rasters.
+La table \@ref(tab:formats) présente quelques informations de base sur les formats de fichiers spatiaux sélectionnés et souvent utilisés.
 
 ```{r formats, echo=FALSE}
 file_formats = tibble::tribble(~Name, ~Extension, ~Info, ~Type, ~Model, 
-                         "ESRI Shapefile", ".shp (the main file)", "Popular format consisting of at least three files. No support for: files > 2GB;  mixed types; names > 10 chars; cols > 255.", "Vector", "Partially open",
-                         "GeoJSON", ".geojson", "Extends the JSON exchange format by including a subset of the simple feature representation; mostly used for storing coordinates in longitude and latitude; it is extended by the TopoJSON format", "Vector", "Open",
-                         "KML", ".kml", "XML-based format for spatial visualization, developed for use with Google Earth. Zipped KML file forms the KMZ format.", "Vector", "Open",
-                         "GPX", ".gpx", "XML schema created for exchange of GPS data.", "Vector", "Open",
-                         "FlatGeobuf", ".fgb", "Single file format allowing for quick reading and writing of vector data. Has streaming capabilities.", "Vector", "Open",
-                         "GeoTIFF", ".tif/.tiff", "Popular raster format. A TIFF file containing additional spatial metadata.", "Raster", "Open",
-                         "Arc ASCII", ".asc", "Text format where the first six lines represent the raster header, followed by the raster cell values arranged in rows and columns.", "Raster", "Open",
-                         "SQLite/SpatiaLite", ".sqlite", "Standalone  relational database, SpatiaLite is the spatial extension of SQLite.", "Vector and raster", "Open",
-                         "ESRI FileGDB", ".gdb", "Spatial and nonspatial objects created by ArcGIS. Allows: multiple feature classes; topology. Limited support from GDAL.", "Vector and raster", "Proprietary",
-                         "GeoPackage", ".gpkg", "Lightweight database container based on SQLite allowing an easy and platform-independent exchange of geodata", "Vector and (very limited) raster", "Open"
+                         "ESRI Shapefile", ".shp (le fichier principal)", "Format populaire composé d'au moins trois fichiers. Pas de prise en charge pour : les fichiers > 2GB ; les types mixtes ; les noms > 10 caractères ; les colonnes > 255.", "Vecteur", "Partiellement ouvert",
+                         "GeoJSON", ".geojson", "Étend le format d'échange JSON en incluant un sous-ensemble de la représentation *simple features* ; principalement utilisé pour stocker des coordonnées en longitude et latitude ; il est étendu par le format TopoJSON.", "Vecteur", "Ouvert",
+                         "KML", ".kml", "Format basé sur XML pour la visualisation spatiale, développé pour être utilisé avec Google Earth. Le fichier KML zippé forme le format KMZ.", "Vecteur", "Ouvert",
+                         "GPX", ".gpx", "Schéma XML créé pour l'échange de données GPS.", "Vecteur", "Ouvert",
+                         "FlatGeobuf", ".fgb", "Format de fichier unique permettant la lecture et l'écriture rapides de données vectorielles. Possède des capacités de diffusion en continu.", "Vecteur", "Ouvert",
+                         "GeoTIFF", ".tif/.tiff", "Format raster populaire. Fichier TIFF contenant des métadonnées spatiales supplémentaires.", "Raster", "Ouvert",
+                         "Arc ASCII", ".asc", "Format textuel dans lequel les six premières lignes représentent l'en-tête du raster, suivies des valeurs des cellules  disposées en lignes et en colonnes.", "Raster", "Ouvert",
+                         "SQLite/SpatiaLite", ".sqlite", "Standalone  relational database, SpatiaLite is the spatial extension of SQLite.", "Vector and raster", "Ouvert",
+                         "ESRI FileGDB", ".gdb", "Objets spatiaux et non spatiaux créés par ArcGIS. Permet : classes d'entités multiples ; topologie. Support limité de GDAL.", "Vecteur and raster", "Propriétaire",
+                         "GeoPackage", ".gpkg", "Base de données légère basée sur SQLite permettant un échange de géodonnées facile et indépendant de la plate-forme", "Vecteur et raster(très limité)", "Ouvert"
                          )
 knitr::kable(file_formats, 
-             caption = "Selected spatial file formats.",
-             caption.short = "Selected spatial file formats.",
+             caption = "Formats de fichiers spatiaux choisis.",
+             caption.short = "Formats de fichiers spatiaux choisis.",
              booktabs = TRUE) |> 
   kableExtra::column_spec(2, width = "7em") |> 
   kableExtra::column_spec(3, width = "14em") |> 
@@ -71,21 +71,21 @@ knitr::kable(file_formats,
 
 \index{Shapefile}
 \index{GeoPackage}
-An important development ensuring the standardization and open-sourcing of file formats was the founding of the Open Geospatial Consortium ([OGC](https://www.ogc.org/)) in 1994.
-Beyond defining the simple features data model (see Section \@ref(intro-sf)), the OGC also coordinates the development of open standards, for example as used in file formats such as GML\index{GML}, KML\index{KML} and GeoPackage\index{GeoPackage}.
-Open file formats of the kind endorsed by the OGC have several advantages over proprietary formats: the standards are published, ensure transparency and open up the possibility for users to further develop and adjust the file formats to their specific needs.
+a création de l'Open Geospatial Consortium ([OGC] (https://www.ogc.org/)) en 1994 a constitué une étape importante dans la normalisation et l'ouverture des formats de fichiers.
+Au-delà de la définition du modèle de données des *simple features* (voir section \@ref(intro-sf)), l'OGC coordonne également le développement de normes ouvertes, utilisées par exemple dans des formats de fichiers tels que GML\index{GML}, KML\index{KML} et GeoPackage\index{GeoPackage}.
+Les formats de fichiers ouverts tels que ceux approuvés par l'OGC présentent plusieurs avantages par rapport aux formats propriétaires : les normes sont publiées, garantissent la transparence et offrent aux utilisateurs la possibilité de développer et d'adapter les formats de fichiers à leurs besoins spécifiques.
 
-ESRI Shapefile\index{Shapefile} is the most popular vector data exchange format; however, it is not an open format (though its specification is open).
-It was developed in the early 1990s and has a number of limitations.
-First of all, it is a multi-file format, which consists of at least three files.
-It only supports 255 columns, column names are restricted to ten characters and the file size limit is 2 GB.
-Furthermore, ESRI Shapefile\index{Shapefile} does not support all possible geometry types, for example, it is unable to distinguish between a polygon and a multipolygon.^[To learn more about ESRI Shapefile limitations and possible alternative file formats, visit http://switchfromshapefile.org/.]
-Despite these limitations, a viable alternative had been missing for a long time. 
-In the recent years, [GeoPackage](https://www.geopackage.org/)\index{GeoPackage} emerged, and seems to be a more than suitable replacement candidate for ESRI Shapefile.
-Geopackage is a format for exchanging geospatial information and an OGC standard. 
-The GeoPackage standard describes the rules on how to store geospatial information in a tiny SQLite container.
-Hence, GeoPackage is a lightweight spatial database container, which allows the storage of vector and raster data but also of non-spatial data and extensions.
-Aside from GeoPackage, there are other geospatial data exchange formats worth checking out (Table \@ref(tab:formats)).
+ESRI Shapefile est le format d'échange de données vectorielles le plus répandu, mais il ne s'agit pas d'un format ouvert (bien que sa spécification le soit).
+Il a été développé au début des années 1990 et présente un certain nombre de limitations.
+Tout d'abord, il s'agit d'un format multi-fichier, qui se compose d'au moins trois fichiers.
+Il ne prend en charge que 255 colonnes, les noms de colonnes sont limités à dix caractères et la taille du fichier est limitée à 2 Go.
+En outre, ESRI Shapefile ne prend pas en charge tous les types de géométrie possibles, par exemple, il n'est pas en mesure de faire la distinction entre un polygone et un multipolygone.^[Pour en savoir plus sur les limitations d'ESRI Shapefile et les formats de fichiers alternatifs possibles, visitez http://switchfromshapefile.org/].
+Malgré ces limites, il manquait depuis longtemps une alternative viable. 
+Ces dernières années, [GeoPackage](https://www.geopackage.org/)\index{GeoPackage} est apparu et semble être un candidat plus qu'approprié pour remplacer ESRI Shapefile.
+Geopackage est un format d'échange d'informations géospatiales et un standard de l'OGC. 
+La norme GeoPackage décrit les règles de stockage des informations géospatiales dans un minuscule conteneur SQLite.
+GeoPackage est donc un conteneur de base de données spatiales léger, qui permet de stocker des données vectorielles et rasters, mais aussi des données non spatiales et des extensions.
+Outre GeoPackage, il existe d'autres formats d'échange de données géospatiales qui méritent d'être examinés (tableau \ref(tab:formats)).
 
 \index{GeoTIFF}
 \index{COG}
